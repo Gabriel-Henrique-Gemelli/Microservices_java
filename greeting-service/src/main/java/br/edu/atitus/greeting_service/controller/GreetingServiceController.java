@@ -22,11 +22,11 @@ public class GreetingServiceController {
 
 	@GetMapping("/{name}")
 	public String greet(@PathVariable String name) {
-		return greeting + " " + name;
+		return greeting + ", " + name +"!!!";
 	}
 	
 	@PostMapping
 	public String greet(@RequestBody User user) {
-		return greeting + " " + user.getName();
+		return greeting + ", " + user.getName() +"!!!";
 	}
 }
