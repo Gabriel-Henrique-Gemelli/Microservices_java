@@ -1,32 +1,31 @@
 package br.edu.atitus.greeting_service.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.atitus.greeting_service.entity.User;
+import br.edu.atitus.greeting_service.configs.GreetingConfig;
 
 @RestController
 @RequestMapping("/greeting")
 public class GreetingServiceController {
 
-	@Value("${greeting-service.greeting}")
-	private String greeting;
-
-	@Value("${greeting-service.default-name}")
-	private String defaultName;
-
-	@GetMapping("/{name}")
-	public String greet(@PathVariable String name) {
-		return greeting + ", " + name +"!!!";
-	}
+	private final GreetingConfig config;
 	
-	@PostMapping
-	public String greet(@RequestBody User user) {
-		return greeting + ", " + user.getName() +"!!!";
+	
+	public GreetingServiceController(GreetingConfig config) {
+		super();
+		this.config = config;
+	}
+
+	@GetMapping({"","/","/name"})
+	public ResponseEntity<String> GetgreetingService(@RequestParam(required = false) String name, @PathVariable(required = false) String namePath) {
+		if (name == null)
+			name = namePath != null ? namePath : config.getDefaultName();
+		String textReturn = String.format("%s %s!!", config.getGreeting(),name);
+		return ResponseEntity.ok(textReturn);
 	}
 }
