@@ -1,12 +1,11 @@
 package br.edu.atitus.currency_service.controllers;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import br.edu.atitus.currency_service.entities.CurrencyEntity;
 import br.edu.atitus.currency_service.repositories.CurrencyRepository;
@@ -17,20 +16,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CurrencyController {
 
-	
 	private final CurrencyRepository repository;
-	
-	@GetMapping("/{amount}/{source}/{target}")
+
+
+	@Value("${server.port}")
+	private int serverPort;
+
+	@GetMapping("/{value}/{source}/{target}")
 	public ResponseEntity<CurrencyEntity> getCurrency(
-			@PathVariable double amount,
+			@PathVariable double value,
 			@PathVariable String source,
-			@PathVariable String target) {
+			@PathVariable String target) throws Exception {
 		
-		CurrencyEntity entity = repository.findBySourceAndTarget(source, target)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Currency not found"));
+		CurrencyEntity entity = repository.findBySourceAndTarget(source,target).orElseThrow(() -> new Exception("Currency unsuported"));
+
+		entity.setConvertedValue(value * entity.getConversionRate());
+		entity.setEnviroment("Currency-service running on port:" + serverPort);
 		
-		entity.setConvertedValue(amount * entity.getConversionRate());
-		entity.setEnviroment(System.getenv("PORT"));
 		
 		return ResponseEntity.ok(entity);
 	}

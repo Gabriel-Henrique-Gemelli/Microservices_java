@@ -1,8 +1,0 @@
-CREATE TABLE produto
-(
-	id seria NOT NULL,
-	marca text NOT NULL,
-	modelo text NOT NULL,
-	valor numeric(10,2) NOT NULL,
-	PRIMARY KEY (id)
-)
