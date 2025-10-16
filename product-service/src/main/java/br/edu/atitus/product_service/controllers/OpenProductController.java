@@ -31,14 +31,17 @@ public class OpenProductController {
 				.orElseThrow(() -> new RuntimeException("Product not found"));
 		if(product.getCurrency().equals(targetCurrency)) {
 			product.setConvertedPrice(product.getPrice());
-			product.setEnvironment("Product service port: " + serverPort);
+			
 		}else {
-			CurrencyResponse currency = client.getCurrency(serverPort,product.getCurrency(), targetCurrency);
+			CurrencyResponse currency = client.getCurrency(product.getPrice(),product.getCurrency(), targetCurrency);
 			product.setConvertedPrice(currency.getConvertedValue());
-			product.setEnvironment("Product service port: " + serverPort + " | " + currency.getEnvironment());
+			product.setEnvironment(product.getEnvironment() + " | " + currency.getEnvironment());
+			product.setConvertedPrice(product.getPrice());
 		}
 		
-		product.setConvertedPrice(product.getPrice()); 
+		product.setEnvironment("Product service port: " + serverPort);
+		
+		 
 		
 		return ResponseEntity.ok(product);
 

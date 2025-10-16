@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(url = "http://localhost:8100", name = "currency-service")
 public interface CurrencyClient {
 
-	@GetMapping("/currency-service/{value}/{sourcce}/{target}")
+	@GetMapping("/currency/{value}/{sourcce}/{target}")
 	CurrencyResponse getCurrency(@PathVariable double value, @PathVariable String sourcce, @PathVariable String target);
 }
