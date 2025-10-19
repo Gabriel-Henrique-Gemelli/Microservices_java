@@ -1,4 +1,4 @@
-package br.edu.atitus.currency_service;
+package br.edu.atitus.gateway_service;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -16,12 +16,12 @@ public class ApigatewayConfig {
 						.filters(f -> f
 								.addRequestHeader("X-USER-NAME", "username")
 								.addRequestParameter("name", "fulano"))
-						.uri("http:://httpbin.org:80"))
+						.uri("http://httpbin.org:80"))
 				.route(p -> p
-						.path("/products/**")
+						.path("/product/**")
 						.uri("lb://product-service"))
 				.route(p -> p
-						.path("/currencyt/**")
+						.path("/currency/**")
 						.uri("lb://currency-service"))
 				.route(p -> p
 						.path("/auth/**")

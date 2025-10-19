@@ -1,4 +1,4 @@
-package br.edu.atitus.currency_service.components;
+package br.edu.atitus.gateway_service.components;
 
 import javax.crypto.SecretKey;
 

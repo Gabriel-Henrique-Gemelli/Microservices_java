@@ -1,4 +1,4 @@
-package br.edu.atitus.currency_service.filters;
+package br.edu.atitus.gateway_service.filters;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import br.edu.atitus.currency_service.components.JwtUtil;
+import br.edu.atitus.gateway_service.components.JwtUtil;
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 
