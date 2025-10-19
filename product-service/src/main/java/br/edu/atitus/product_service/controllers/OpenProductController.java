@@ -1,6 +1,9 @@
 package br.edu.atitus.product_service.controllers;
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,36 +22,40 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/product")
 public class OpenProductController {
 
-	private final ProductRepository repository;
-	private final CurrencyClient client;
-	private final CacheManager cacheManager;
-	
+	 private final ProductRepository repository;
+	    private final CurrencyClient client;
+	    private final CacheManager cacheManager;
 
-	@Value("${server.port}")
-	private int serverPort;
+	    @Value("${server.port}")
+	    private int serverPort;
 
-	@GetMapping("/{idProduct}/{targetCurrency}")
-	public ResponseEntity<ProductEntity> getProduct(@PathVariable Long idProduct, @PathVariable String targetCurrency) {
+	    @GetMapping("/{idProduct}/{targetCurrency}")
+	    public ResponseEntity<ProductEntity> getProduct(@PathVariable Long idProduct, @PathVariable String targetCurrency) {
 
-		String nameCache = "Product";
-		
-		ProductEntity product = repository.findById(idProduct)
-				.orElseThrow(() -> new RuntimeException("Product not found"));
-		String KeyCache = product.getCurrency();
+	        String nameCache = "Product";
+	        String normalizedTarget = targetCurrency == null ? "" : targetCurrency.toUpperCase(Locale.ROOT);
 
-		product.setEnvironment("Product service port: " + serverPort);
+	        ProductEntity product = repository.findById(idProduct)
+	                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-		if (product.getCurrency().equals(targetCurrency)) {
-			product.setConvertedPrice(product.getPrice());
+	        String productCurrency = product.getCurrency() == null ? "" : product.getCurrency().toUpperCase(Locale.ROOT);
 
-		} else {
-			CurrencyResponse currency = client.getCurrency(product.getPrice(), product.getCurrency(), targetCurrency);
-			product.setConvertedPrice(currency.getConvertedValue());
-			product.setEnvironment(product.getEnvironment() + " - " + currency.getEnvironment());
-		}
+	        product.setEnvironment("Product service port: " + serverPort);
 
-		cacheManager.getCache(nameCache).put(KeyCache, product);
-		return ResponseEntity.ok(product);
+	        if (productCurrency.equals(normalizedTarget)) {
+	            product.setConvertedPrice(product.getPrice());
+	        } else {
+	            CurrencyResponse currency = client.getCurrency(product.getPrice(), productCurrency, normalizedTarget);
+	            product.setConvertedPrice(currency.getConvertedValue());
+	            product.setEnvironment(product.getEnvironment() + " - " + currency.getEnvironment());
+	        }
 
-	}
+	        String cacheKey = idProduct + ":" + productCurrency + "->" + normalizedTarget;
+	        Cache cache = cacheManager.getCache(nameCache);
+	        if (cache != null) {
+	            cache.put(cacheKey, product);
+	        }
+
+	        return ResponseEntity.ok(product);
+	    }
 }
