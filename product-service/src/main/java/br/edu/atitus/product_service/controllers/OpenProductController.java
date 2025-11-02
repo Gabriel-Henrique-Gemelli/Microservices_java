@@ -3,9 +3,9 @@ package br.edu.atitus.product_service.controllers;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -74,8 +74,8 @@ public class OpenProductController {
 
 	@GetMapping("/{targetCurrency}")
 	public ResponseEntity<Page<ProductEntity>> getAllProducts(@PathVariable String targetCurrency,
-			@PageableDefault(page = 0, size = 5, sort = "description", direction = Direction.ASC) Pageable pageable) {
-		Page<ProductEntity> products = repository.findAll(pageable);
+			@PageableDefault(page = 0, size = 5, sort = "description", direction = Direction.ASC) Pageable page) {
+		Page<ProductEntity> products = repository.findAll(page);
 		for (ProductEntity product : products) {
 			CurrencyResponse currency = client.getCurrency(product.getPrice(), product.getCurrency(), targetCurrency);
 			product.setConvertedPrice(currency.getConvertedValue());

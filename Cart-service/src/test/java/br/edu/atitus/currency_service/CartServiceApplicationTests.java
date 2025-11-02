@@ -1,10 +1,10 @@
-package br.edu.atitus.gateway_service;
+package br.edu.atitus.currency_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GatewayServiceApplicationTests {
+class CartServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
