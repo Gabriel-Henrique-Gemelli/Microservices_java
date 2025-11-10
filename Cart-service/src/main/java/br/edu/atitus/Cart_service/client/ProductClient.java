@@ -10,6 +10,6 @@ import br.edu.atitus.Cart_service.DTO.ProductResponse;
 public interface ProductClient {
 
 	
-	@GetMapping("/ws/products/{idProduct}")
+	@GetMapping("product/{idProduct}")
 	ProductResponse getProduct(@PathVariable Long idProduct);
 }

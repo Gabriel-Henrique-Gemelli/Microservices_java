@@ -14,8 +14,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "tb_product")
 @Data
-@Getter
-@Setter
 public class ProductEntity {
 	
 	@Id
