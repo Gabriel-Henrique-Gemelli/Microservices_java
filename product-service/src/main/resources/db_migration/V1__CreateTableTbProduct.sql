@@ -6,5 +6,6 @@ create table tb_product (
 	currency varchar(3) not null,
 	price float(53) not null,
 	stock integer not null,
+	image_url TEXT not null,
 	primary key (id)
 );
