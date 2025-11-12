@@ -9,7 +9,6 @@ import br.edu.atitus.Cart_service.DTO.ProductResponse;
 @FeignClient(name = "product-service")
 public interface ProductClient {
 
-	
 	@GetMapping("product/{idProduct}")
 	ProductResponse getProduct(@PathVariable Long idProduct);
 }
