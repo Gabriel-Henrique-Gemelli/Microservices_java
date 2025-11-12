@@ -3,6 +3,7 @@ volumes:
   db-currency-data:
   db-user-data:
   db-order-data:
+  db-cart-data:
 
 services:
 
@@ -152,3 +153,25 @@ services:
       EUREKA_INSTANCE_HOSTNAME: gateway-service
     
 # -------------------------------
+  db-cart:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: db_cart
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - db-cart-data:/var/lib/postgresql/data
+    
+  cart-service:
+    image: cart-service:latest
+    build:
+      context: ./cart-service
+    depends_on:
+      - discovery-service
+      - db-cart
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-cart:5432/db_cart
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: cart-service

@@ -7,20 +7,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.edu.atitus.auth_service.client.cartClient;
 import br.edu.atitus.auth_service.components.Validator;
+import br.edu.atitus.auth_service.dto.CreateCartRequest;
 import br.edu.atitus.auth_service.entities.UserEntity;
 import br.edu.atitus.auth_service.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder encoder;
-
-	public UserService(UserRepository userRepository, PasswordEncoder encoder) {
-		super();
-		this.userRepository = userRepository;
-		this.encoder = encoder;
-	}
+	private final cartClient client;
 
 	private void validate(UserEntity user) throws Exception {
 		if (user.getName() == null || user.getName().isEmpty())
@@ -50,7 +49,10 @@ public class UserService implements UserDetailsService {
 			throw new Exception("Objeto nulo");
 		validate(user);
 		format(user);
-		return userRepository.save(user);
+		UserEntity salvado = userRepository.save(user);
+		client.create(new CreateCartRequest(salvado.getId()));
+		return salvado;
+		
 	}
 
 	@Override

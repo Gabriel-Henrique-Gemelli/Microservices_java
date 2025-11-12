@@ -40,11 +40,16 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception {
-		var user = convertDTO2Entity(dto);
-		user.setType(UserType.Common);
-		service.save(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+	public ResponseEntity<?> signup(@RequestBody SignupDTO dto) throws Exception {
+		try {
+			UserEntity user = convertDTO2Entity(dto);
+			user.setType(UserType.Common);
+			service.save(user);
+			return ResponseEntity.status(HttpStatus.CREATED).body(user);
+		}
+		catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Deu merda" + e.getMessage());
+		}
 	}
 
 	@PostMapping("/signin")

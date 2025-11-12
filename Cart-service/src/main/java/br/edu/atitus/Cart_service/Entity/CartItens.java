@@ -23,6 +23,6 @@ public class CartItens {
 	private Double productPrice;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "cart_id")
 	private cartEntity cart;
 }
