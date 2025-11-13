@@ -2,6 +2,8 @@ package br.edu.atitus.Cart_service.service;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.atitus.Cart_service.DTO.ProductResponse;
+import br.edu.atitus.Cart_service.Entity.CartItem;
 import br.edu.atitus.Cart_service.Entity.cartEntity;
 import br.edu.atitus.Cart_service.client.ProductClient;
 import br.edu.atitus.Cart_service.repository.CartItemRepository;
@@ -32,7 +34,27 @@ public class cartService {
 		return cart;
 	}
 	
-	public cartEntity addItem(Long cartId, Long productId, String productName, Double productPrice, Integer quantity) {
+	@Transactional
+	public cartEntity addItem(Long userId, Long productId,String currency) {
+		ProductResponse produto = client.getProduct(productId,currency);
+		cartEntity carrinho = existByUserIdAndCreate(userId);
+		CartItem item = itemRepository.findByCart_IdAndProductId(carrinho.getId(), productId).orElse(null);
+		if(item == null) {
+			item = new CartItem();
+			item.setCart(carrinho);
+			item.setProductId(produto.getId());
+			item.setProductName(produto.getDescription());
+			item.setQuantity(produto.getStock());
+			item.setProductPrice(produto.getPrice());
+			itemRepository.save(item);
+		}
+		else {
+			item.setQuantity(item.getQuantity() + produto.getStock());
+			itemRepository.save(item);
+		}
+		
+		return carrinho;
+	
 		
 	}
 	

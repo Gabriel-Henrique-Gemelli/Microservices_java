@@ -31,4 +31,9 @@ public class CartController {
     public cartEntity byUser(@PathVariable Long userId) {
         return service.findByUserId(userId);
     }
+    
+    @PostMapping("/additem/{userId}/{ProductId}/{currency}")
+    public cartEntity AddItem(@PathVariable Long userId,@PathVariable Long ProductId,@PathVariable String currency) {
+        return service.addItem(userId,ProductId,currency);
+    }
 }

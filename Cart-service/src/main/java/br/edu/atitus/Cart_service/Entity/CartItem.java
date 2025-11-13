@@ -1,6 +1,6 @@
 package br.edu.atitus.Cart_service.Entity;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,13 +17,14 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "tb_cart_item", uniqueConstraints = {
-        @UniqueConstraint(name = "ux_tb_cart_item_cart_product", columnNames = {"cart_id", "product_id"})
+        @UniqueConstraint(name = "ux_tb_cart_item_cart_product", columnNames = {"cart_id"})
 })
 public class CartItem {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private cartEntity cart;
@@ -34,8 +35,8 @@ public class CartItem {
     @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "product_price", nullable = false, precision = 14, scale = 2)
-    private BigDecimal productPrice;
+    @Column(name = "product_price", nullable = false)
+    private Double productPrice;
 
     @Column(nullable = false)
     private Integer quantity;
