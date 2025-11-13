@@ -18,28 +18,27 @@ public class cartService {
 	private final cartRepository repository;
 	private final CartItemRepository itemRepository;
 	private final ProductClient client;
-	
-	
-    @Transactional
-    public cartEntity existByUserIdAndCreate(Long userId) {
-        return repository.findByUserId(userId).orElseGet(() -> {
-            cartEntity cart = new cartEntity();
-            cart.setUserId(userId);
-            return repository.save(cart);
-        });
-    }
-	
+
+	@Transactional
+	public cartEntity existByUserIdAndCreate(Long userId) {
+		return repository.findByUserId(userId).orElseGet(() -> {
+			cartEntity cart = new cartEntity();
+			cart.setUserId(userId);
+			return repository.save(cart);
+		});
+	}
+
 	public cartEntity findByUserId(Long userId) {
 		cartEntity cart = repository.findByUserId(userId).orElse(existByUserIdAndCreate(userId));
 		return cart;
 	}
-	
+
 	@Transactional
-	public cartEntity addItem(Long userId, Long productId,String currency) {
-		ProductResponse produto = client.getProduct(productId,currency);
+	public cartEntity addItem(Long userId, Long productId, String currency) {
+		ProductResponse produto = client.getProduct(productId, currency);
 		cartEntity carrinho = existByUserIdAndCreate(userId);
 		CartItem item = itemRepository.findByCart_IdAndProductId(carrinho.getId(), productId).orElse(null);
-		if(item == null) {
+		if (item == null) {
 			item = new CartItem();
 			item.setCart(carrinho);
 			item.setProductId(produto.getId());
@@ -47,15 +46,13 @@ public class cartService {
 			item.setQuantity(produto.getStock());
 			item.setProductPrice(produto.getPrice());
 			itemRepository.save(item);
-		}
-		else {
+		} else {
 			item.setQuantity(item.getQuantity() + produto.getStock());
 			itemRepository.save(item);
 		}
-		
+
 		return carrinho;
-	
-		
+
 	}
-	
+
 }
