@@ -7,5 +7,6 @@ public class ProductResponse {
 
 	private Long id;
 	private Double price;
+	private 
 	private String name;
 }

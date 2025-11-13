@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.atitus.Cart_service.Entity.cartEntity;
-import br.edu.atitus.Cart_service.client.ProductClient;
 import br.edu.atitus.Cart_service.service.cartService;
-
-
 import lombok.RequiredArgsConstructor;
 
 record CreateCartRequest(Long userId) {}
@@ -22,10 +19,10 @@ record CreateCartRequest(Long userId) {}
 public class CartController {
 	
 	private final cartService service;
-	private final ProductClient client;
+//	private final ProductClient client;
 	
 	
-	@PostMapping
+	@PostMapping("/create")
     public cartEntity create(@RequestBody CreateCartRequest req) {
         return service.existByUserIdAndCreate(req.userId());
     }

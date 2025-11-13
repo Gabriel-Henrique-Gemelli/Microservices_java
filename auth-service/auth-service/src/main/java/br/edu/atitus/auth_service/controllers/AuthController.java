@@ -40,24 +40,23 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> signup(@RequestBody SignupDTO dto) throws Exception {
-		try {
-			UserEntity user = convertDTO2Entity(dto);
-			user.setType(UserType.Common);
-			service.save(user);
-			return ResponseEntity.status(HttpStatus.CREATED).body(user);
-		}
-		catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Deu merda" + e.getMessage());
-		}
+	public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception {
+
+		UserEntity user = convertDTO2Entity(dto);
+		user.setType(UserType.Common);
+		service.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<SigninResponseDTO> PostSignin(@RequestBody SigninDTO signin) throws AuthenticationException, Exception {
+	public ResponseEntity<SigninResponseDTO> PostSignin(@RequestBody SigninDTO signin)
+			throws AuthenticationException, Exception {
 		authConfig.getAuthenticationManager()
-					.authenticate(new UsernamePasswordAuthenticationToken(signin.email(), signin.password()));
+				.authenticate(new UsernamePasswordAuthenticationToken(signin.email(), signin.password()));
 		UserEntity user = (UserEntity) service.loadUserByUsername(signin.email());
-		SigninResponseDTO response = new SigninResponseDTO(user, JwtUtil.generateToken(user.getEmail(), user.getId(), user.getType()));
+		SigninResponseDTO response = new SigninResponseDTO(user,
+				JwtUtil.generateToken(user.getEmail(), user.getId(), user.getType()));
 		return ResponseEntity.ok(response);
 
 	}
@@ -67,7 +66,7 @@ public class AuthController {
 		String cleanMessage = e.getMessage().replaceAll("[\\r\\n]", " ");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(cleanMessage);
 	}
-	
+
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<String> handleException(AuthenticationException e) {
 		String cleanMessage = e.getMessage().replaceAll("[\\r\\n]", " ");

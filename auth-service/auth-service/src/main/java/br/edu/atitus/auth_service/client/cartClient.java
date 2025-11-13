@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import br.edu.atitus.auth_service.dto.CartDTO;
 import br.edu.atitus.auth_service.dto.CreateCartRequest;
 
-@FeignClient(name = "cart-service")
+@FeignClient(name = "Cart-service")
 public interface cartClient {
 
-    @PostMapping("/carts")
+    @PostMapping("/cart/create")
     CartDTO create(@RequestBody CreateCartRequest req);
 
-    @GetMapping("/carts/by-user/{userId}")
+    @GetMapping("/cart/by-user/{userId}")
     CartDTO findByUser(@PathVariable Long userId);
 }

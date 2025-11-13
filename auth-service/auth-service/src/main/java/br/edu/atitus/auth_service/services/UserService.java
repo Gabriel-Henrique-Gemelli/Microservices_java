@@ -50,7 +50,13 @@ public class UserService implements UserDetailsService {
 		validate(user);
 		format(user);
 		UserEntity salvado = userRepository.save(user);
-		client.create(new CreateCartRequest(salvado.getId()));
+		try {
+			client.create(new CreateCartRequest(salvado.getId()));	
+		}
+		catch (Exception e) {
+			throw new Exception("Erro ao criar carrinho para o usuário: " + e.getMessage());
+		}
+		
 		return salvado;
 		
 	}
