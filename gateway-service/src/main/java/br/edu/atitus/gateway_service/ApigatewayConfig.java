@@ -35,6 +35,9 @@ public class ApigatewayConfig {
             .route(p -> p
                 .path("/cart/**")
                 .uri("lb://Cart-service"))
+            .route(p -> p
+                    .path("/email/**")
+                    .uri("lb://email-service"))
             .build();
     }
 }

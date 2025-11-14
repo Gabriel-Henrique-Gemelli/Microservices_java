@@ -60,6 +60,17 @@ public class UserService implements UserDetailsService {
 		return salvado;
 		
 	}
+	@Transactional
+	public UserEntity updatePassword(UserEntity user,String senhaNova)  throws Exception {
+		if (user == null)
+			throw new Exception("Objeto nulo");
+		if (user.getId() == null)
+			throw new Exception("ID nulo para atualização");
+		validate(user);
+		user.setPassword(senhaNova);
+		format(user);
+		return userRepository.save(user);
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

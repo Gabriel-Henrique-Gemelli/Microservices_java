@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,10 @@ public class CartController {
 	
 	
 	@PostMapping("/create")
-    public cartEntity create(@RequestBody CreateCartRequest req) {
+    public cartEntity create(@RequestBody CreateCartRequest req,
+    		@RequestHeader("X-User-Id") Long userId,
+			 @RequestHeader("X-User-Email") String userEmail,
+			 @RequestHeader("X-User-Type")Integer userType) {
         return service.existByUserIdAndCreate(req.userId());
     }
 

@@ -7,7 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,6 +62,19 @@ public class AuthController {
 				JwtUtil.generateToken(user.getEmail(), user.getId(), user.getType()));
 		return ResponseEntity.ok(response);
 
+	}
+	
+	@GetMapping("/buscarPorEmail/{email}")
+	public ResponseEntity<UserEntity> buscarPorEmail(@PathVariable String email) throws Exception {
+		UserEntity user = (UserEntity) service.loadUserByUsername(email);
+		return ResponseEntity.ok(user);
+	}
+	
+	@PutMapping("/updatePassword/{email}/{newPassword}")
+	public ResponseEntity<UserEntity> updatePassword(@PathVariable String email, @PathVariable String newPassword) throws Exception {
+		UserEntity user = (UserEntity) service.loadUserByUsername(email);
+		service.updatePassword(user, newPassword);
+		return ResponseEntity.ok(user);
 	}
 
 	@ExceptionHandler(Exception.class)
