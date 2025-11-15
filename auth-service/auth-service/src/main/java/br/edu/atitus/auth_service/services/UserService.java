@@ -1,5 +1,8 @@
 package br.edu.atitus.auth_service.services;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.atitus.auth_service.client.cartClient;
 import br.edu.atitus.auth_service.components.Validator;
 import br.edu.atitus.auth_service.dto.CreateCartRequest;
+import br.edu.atitus.auth_service.entities.ResetToken;
 import br.edu.atitus.auth_service.entities.UserEntity;
 import br.edu.atitus.auth_service.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,20 @@ public class UserService implements UserDetailsService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder encoder;
 	private final cartClient client;
+	private final ResetTokenService tokenService;
+	
+	public ResetToken createRedefinicaoSenha(String email) {
+		ResetToken request = new ResetToken();
+		UserEntity usuario = (UserEntity) loadUserByUsername(email);
+		String token = UUID.randomUUID().toString();
+		request.setToken(token);
+		request.setUser(usuario);
+		request.setExpiracao(LocalDateTime.now().plusHours(1));
+
+		tokenService.save(request);
+		
+		return request;
+	}
 
 	private void validate(UserEntity user) throws Exception {
 		if (user.getName() == null || user.getName().isEmpty())
@@ -61,11 +79,18 @@ public class UserService implements UserDetailsService {
 		
 	}
 	@Transactional
-	public UserEntity updatePassword(UserEntity user,String senhaNova)  throws Exception {
+	public UserEntity updatePassword(String senhaNova,String token)  throws Exception {
+		ResetToken resetToken = tokenService.findByToken(token);	
+		UserEntity user = resetToken.getUser();
+		
 		if (user == null)
 			throw new Exception("Objeto nulo");
 		if (user.getId() == null)
 			throw new Exception("ID nulo para atualização");
+		
+		String tokenCorreto = tokenService.findByToken(token).getToken();
+		if(token != tokenCorreto)
+			throw new Exception("Token inválido");
 		validate(user);
 		user.setPassword(senhaNova);
 		format(user);

@@ -19,23 +19,35 @@ import br.edu.atitus.auth_service.components.JwtUtil;
 import br.edu.atitus.auth_service.dtos.SigninDTO;
 import br.edu.atitus.auth_service.dtos.SigninResponseDTO;
 import br.edu.atitus.auth_service.dtos.SignupDTO;
+import br.edu.atitus.auth_service.entities.ResetToken;
 import br.edu.atitus.auth_service.entities.UserEntity;
 import br.edu.atitus.auth_service.entities.UserType;
+import br.edu.atitus.auth_service.services.ResetTokenService;
 import br.edu.atitus.auth_service.services.UserService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-	private UserService service;
+	private final UserService service;
 	private final AuthenticationConfiguration authConfig;
+	private final ResetTokenService resetTokenService;
 
-	public AuthController(UserService service, AuthenticationConfiguration authConfig) {
-		super();
-		this.service = service;
-		this.authConfig = authConfig;
+	
+	@PostMapping("/requestToken/create/{email}")
+	public ResetToken createResetToken(@PathVariable String email) {
+		return service.createRedefinicaoSenha(email);
 	}
-
+	
+	@GetMapping("/requestToken/getToken/{Token}")
+	public ResponseEntity<ResetToken> getByToken(@PathVariable String Token) {
+		resetTokenService.findByToken(Token);
+		return ResponseEntity.ok().build();
+	}
+	
+	
 	private UserEntity convertDTO2Entity(SignupDTO dto) {
 		var user = new UserEntity();
 		BeanUtils.copyProperties(dto, user);
@@ -70,10 +82,9 @@ public class AuthController {
 		return ResponseEntity.ok(user);
 	}
 	
-	@PutMapping("/updatePassword/{email}/{newPassword}")
-	public ResponseEntity<UserEntity> updatePassword(@PathVariable String email, @PathVariable String newPassword) throws Exception {
-		UserEntity user = (UserEntity) service.loadUserByUsername(email);
-		service.updatePassword(user, newPassword);
+	@PutMapping("/updatePassword/{token}/{newPassword}")
+	public ResponseEntity<UserEntity> updatePassword(@PathVariable String token, @PathVariable String newPassword) throws Exception {
+		UserEntity user = service.updatePassword(token, newPassword);
 		return ResponseEntity.ok(user);
 	}
 

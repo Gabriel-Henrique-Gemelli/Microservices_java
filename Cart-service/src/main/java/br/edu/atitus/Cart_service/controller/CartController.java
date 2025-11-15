@@ -16,7 +16,7 @@ record CreateCartRequest(Long userId) {}
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cart")
+@RequestMapping("/ws/cart")
 public class CartController {
 	
 	private final cartService service;
@@ -24,10 +24,7 @@ public class CartController {
 	
 	
 	@PostMapping("/create")
-    public cartEntity create(@RequestBody CreateCartRequest req,
-    		@RequestHeader("X-User-Id") Long userId,
-			 @RequestHeader("X-User-Email") String userEmail,
-			 @RequestHeader("X-User-Type")Integer userType) {
+    public cartEntity create(@RequestBody CreateCartRequest req) {
         return service.existByUserIdAndCreate(req.userId());
     }
 
@@ -36,8 +33,16 @@ public class CartController {
         return service.findByUserId(userId);
     }
     
-    @PostMapping("/additem/{userId}/{ProductId}/{currency}")
-    public cartEntity AddItem(@PathVariable Long userId,@PathVariable Long ProductId,@PathVariable String currency) {
-        return service.addItem(userId,ProductId,currency);
+    @PostMapping("/additem/{idUser}/{ProductId}/{currency}")
+    public cartEntity AddItem(
+    		@PathVariable Long idUser,
+    		@PathVariable Long ProductId,
+    		@PathVariable String currency,
+    		@RequestHeader("X-User-Id") Long userId,
+		    @RequestHeader("X-User-Email") String userEmail,
+			@RequestHeader("X-User-Type")Integer userType) {
+    	
+    	
+        return service.addItem(idUser,ProductId,currency);
     }
 }

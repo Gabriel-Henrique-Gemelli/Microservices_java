@@ -20,7 +20,7 @@ public class EmailController {
 	public ResponseEntity<?> sendEmail(@PathVariable String email) {
 		
 		try {
-//			service.enviarEmail(email);
+			service.solicitarRedefinicaoSenha(email);
 			return ResponseEntity.ok().build();	
 		}
 		catch (Exception e) {

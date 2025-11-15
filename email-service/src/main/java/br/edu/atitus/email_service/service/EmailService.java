@@ -1,25 +1,17 @@
 package br.edu.atitus.email_service.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import br.edu.atitus.email_service.client.User;
-import br.edu.atitus.email_service.dto.userRequest;
-import br.edu.atitus.email_service.entity.RedefinirSenha;
-import jakarta.mail.MessagingException;
+import br.edu.atitus.email_service.dto.ResetToken;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-
 public class EmailService {
 	
 	private final JavaMailSender mailSender;
@@ -98,8 +90,7 @@ public class EmailService {
                         </table>
                     </body>
                     </html>
-                    """;
-            		//.formatted(token);
+                    """.formatted(token);
 
            
     			helper.setText(html, true);
@@ -116,22 +107,14 @@ public class EmailService {
     public void enviarEmailRedefinicaoAsync(String destino, String token) {
         try {
         	enviarEmail(destino, token);
-        } catch (MessagingException e) {
-            log.error("Erro ao enviar e-mail de redefinição", e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 	
 	public void solicitarRedefinicaoSenha(String email) {
-		userRequest usuario = client.getUser(email).orElseThrow(() -> new Exception("Usuário não encontrado"));
+		ResetToken reset = client.createResetToken(email);
 
-		String token = UUID.randomUUID().toString();
-		RedefinirSenha resetToken = new RedefinirSenha();
-		resetToken.setToken(token);
-		resetToken.setUsuario(usuario);
-		resetToken.setExpiracao(LocalDateTime.now().plusHours(1));
-
-		repository.save(resetToken);
-
-		enviarEmail(email, token);
+		enviarEmailRedefinicaoAsync(email, reset.getToken());
 	}
 }
