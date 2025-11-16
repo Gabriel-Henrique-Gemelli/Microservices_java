@@ -79,18 +79,18 @@ public class UserService implements UserDetailsService {
 		
 	}
 	@Transactional
-	public UserEntity updatePassword(String senhaNova,String token)  throws Exception {
+	public UserEntity updatePassword(String token ,String senhaNova)  throws Exception {
 		ResetToken resetToken = tokenService.findByToken(token);	
+		
+		if(resetToken == null) {
+			throw new Exception("Token inválido");
+		}
 		UserEntity user = resetToken.getUser();
 		
 		if (user == null)
 			throw new Exception("Objeto nulo");
 		if (user.getId() == null)
 			throw new Exception("ID nulo para atualização");
-		
-		String tokenCorreto = tokenService.findByToken(token).getToken();
-		if(token != tokenCorreto)
-			throw new Exception("Token inválido");
 		validate(user);
 		user.setPassword(senhaNova);
 		format(user);
