@@ -23,6 +23,8 @@ public class ProductEntity {
 	private double price;
 	private String currency;
 	private Integer stock;
+	private String especificacao;
+	private String comoUsar;
 	
 	@Column(name = "image_url")
 	private String imageUrl;
