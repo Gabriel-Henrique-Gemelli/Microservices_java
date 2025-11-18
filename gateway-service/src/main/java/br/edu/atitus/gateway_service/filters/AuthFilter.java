@@ -41,9 +41,9 @@ public class AuthFilter implements GlobalFilter,Ordered {
 			Claims payload = JwtUtil.validateToken(jwt);
 			if (payload != null) {
 				ServerHttpRequest modifiedRequest = request.mutate()
-						.header("X-User-Id", String.valueOf(payload.get("Id",Long.class)))
+						.header("X-User-Id", String.valueOf(payload.get("id",Long.class)))
 						.header("X-User-Type", String.valueOf(payload.get("type",Integer.class)))
-						.header("X-User-Email", payload.get("id",String.class))
+						.header("X-User-Email", payload.get("email",String.class))
 						.build();
 				return chain.filter(exchange.mutate().request(modifiedRequest).build());
 			}

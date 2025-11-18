@@ -33,7 +33,7 @@ public class ApigatewayConfig {
                 .path("/greeting/**")
                 .uri("lb://greeting-service"))
             .route(p -> p
-                .path("/cart/**")
+                .path("/ws/cart/**")
                 .uri("lb://Cart-service"))
             .route(p -> p
                     .path("/email/**")

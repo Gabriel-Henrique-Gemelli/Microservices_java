@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,7 @@ record CreateCartRequest(Long userId) {}
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cart")
+@RequestMapping("/ws/cart")
 public class CartController {
 	
 	private final cartService service;
@@ -32,13 +33,15 @@ public class CartController {
         return service.existByUserIdAndCreate(userId);
     }
     
-    @PostMapping("/additem/{idUser}/{ProductId}/{currency}")
+    @PostMapping("/additem/{ProductId}/{quantidade}/{currency}")
     public cartEntity AddItem(
-    		@PathVariable Long idUser,
     		@PathVariable Long ProductId,
-    		@PathVariable String currency){
+    		@PathVariable String currency,
+    		@PathVariable Integer quantidade,
+    		@RequestHeader("X-User-Id") Long userId,
+			@RequestHeader("X-User-Type") Integer userType) {
     	
     	
-        return service.addItem(idUser,ProductId,currency);
+        return service.addItem(userId,ProductId,currency,quantidade);
     }
 }

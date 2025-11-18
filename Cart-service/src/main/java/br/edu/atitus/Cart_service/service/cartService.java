@@ -34,20 +34,25 @@ public class cartService {
 //	}
 
 	@Transactional
-	public cartEntity addItem(Long userId, Long productId, String currency) {
+	public cartEntity addItem(Long userId, Long productId, String currency,Integer quantidade) {
 		ProductResponse produto = client.getProduct(productId, currency);
 		cartEntity carrinho = existByUserIdAndCreate(userId);
 		CartItem item = itemRepository.findByCart_IdAndProductId(carrinho.getId(), productId).orElse(null);
+		
+		if (produto.getStock() < quantidade) {
+			throw new IllegalArgumentException("Nao tem estoque suficiente");
+		}
+		
 		if (item == null) {
 			item = new CartItem();
 			item.setCart(carrinho);
 			item.setProductId(produto.getId());
 			item.setProductName(produto.getDescription());
-			item.setQuantity(produto.getStock());
+			item.setQuantity(quantidade);
 			item.setProductPrice(produto.getPrice());
 			itemRepository.save(item);
 		} else {
-			item.setQuantity(item.getQuantity() + produto.getStock());
+			item.setQuantity(item.getQuantity() + quantidade);
 			itemRepository.save(item);
 		}
 
