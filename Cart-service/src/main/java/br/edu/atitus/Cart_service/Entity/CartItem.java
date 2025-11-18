@@ -16,9 +16,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "tb_cart_item", uniqueConstraints = {
-        @UniqueConstraint(name = "ux_tb_cart_item_cart_product", columnNames = {"cart_id"})
-})
+@Table(name = "tb_cart_item")
 public class CartItem {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

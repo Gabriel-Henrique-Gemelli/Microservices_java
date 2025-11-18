@@ -38,6 +38,9 @@ public class ApigatewayConfig {
             .route(p -> p
                     .path("/email/**")
                     .uri("lb://email-service"))
+            .route(p -> p
+                    .path("/enderecos/**")
+                    .uri("lb://maps-service"))
             .build();
     }
 }

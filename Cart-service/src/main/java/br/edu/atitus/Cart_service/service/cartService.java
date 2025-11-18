@@ -28,10 +28,10 @@ public class cartService {
 		});
 	}
 
-	public cartEntity findByUserId(Long userId) {
-		cartEntity cart = repository.findByUserId(userId).orElse(existByUserIdAndCreate(userId));
-		return cart;
-	}
+//	public cartEntity findByUserId(Long userId) {
+//		cartEntity cart = repository.findByUserId(userId).orElse(existByUserIdAndCreate(userId));
+//		return cart;
+//	}
 
 	@Transactional
 	public cartEntity addItem(Long userId, Long productId, String currency) {
