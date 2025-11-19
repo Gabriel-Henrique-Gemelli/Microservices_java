@@ -28,7 +28,7 @@ public class ApigatewayConfig {
                 .uri("lb://order-service"))
             .route(p -> p
                 .path("/ws/orders/**")
-                .uri("lb:ws://order-service"))
+                .uri("lb://order-service"))
             .route(p -> p
                 .path("/greeting/**")
                 .uri("lb://greeting-service"))
