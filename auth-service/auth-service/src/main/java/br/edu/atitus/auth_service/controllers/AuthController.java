@@ -63,6 +63,15 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 
 	}
+	
+	@PostMapping("/adm/signup")
+	public ResponseEntity<UserEntity> signupAdm(@RequestBody SignupDTO dto) throws Exception {
+		UserEntity user = convertDTO2Entity(dto);
+		user.setType(UserType.Admin);
+		service.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
+	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<SigninResponseDTO> PostSignin(@RequestBody SigninDTO signin)

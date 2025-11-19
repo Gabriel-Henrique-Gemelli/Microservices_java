@@ -2,6 +2,7 @@ package br.edu.atitus.order_service.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,14 @@ public class OrderController {
 //	private final ProductClient productClient;
 
 
-	@PostMapping("/create")
+	@PostMapping("/create/{cep}")
 	public ResponseEntity<OrderEntity> createOrder(
+			@PathVariable String cep,
 			@RequestHeader("X-User-Id") Long userId,
 			 @RequestHeader("X-User-Email") String userEmail,
 			 @RequestHeader("X-User-Type") Integer userType) {
 		
-		OrderEntity order = orderService.createOrder(userId);
+		OrderEntity order = orderService.createOrder(userId,cep);
 		return ResponseEntity.status(HttpStatus.CREATED).body(order);
 	}
 

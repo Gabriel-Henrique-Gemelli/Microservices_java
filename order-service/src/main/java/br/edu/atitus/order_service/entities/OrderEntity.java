@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.edu.atitus.order_service.clients.MapsResponse;
 import br.edu.atitus.order_service.clients.cartResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +30,7 @@ public class OrderEntity {
 
     @Column(nullable = false)
     @JsonIgnore
-    private Long customerId; // ID do cliente logado
+    private Long customerId;
 
     @Transient
     private cartResponse carrinho;
@@ -37,6 +38,14 @@ public class OrderEntity {
     @Transient
     private double totalPrice;
     
+    @Column(name = "cart_id", unique = true)
+    private Long cartId;
+
+    
     @Transient
-    private double totalConvertedPrice; 
+    private double totalConvertedPrice;
+    
+    @Transient
+    private MapsResponse endereco;
+   
 }
