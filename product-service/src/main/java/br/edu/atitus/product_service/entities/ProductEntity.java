@@ -21,6 +21,7 @@ public class ProductEntity {
 	private String description;
 	private String brand;
 	private double price;
+	private String model;
 	private String currency;
 	private Integer stock;
 	private String especificacao;

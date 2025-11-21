@@ -12,9 +12,9 @@ import br.edu.atitus.auth_service.dto.CreateCartRequest;
 @FeignClient(name = "Cart-service")
 public interface cartClient {
 
-    @PostMapping("cart/create")
+    @PostMapping("/ws/cart/create")
     CartDTO create(@RequestBody CreateCartRequest req);
 
-    @GetMapping("/cart/by-user/{userId}")
+    @GetMapping("/ws/cart/by-user/{userId}")
     CartDTO findByUser(@PathVariable Long userId);
 }

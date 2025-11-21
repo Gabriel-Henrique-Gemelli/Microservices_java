@@ -15,6 +15,7 @@ import br.edu.atitus.auth_service.components.Validator;
 import br.edu.atitus.auth_service.dto.CreateCartRequest;
 import br.edu.atitus.auth_service.entities.ResetToken;
 import br.edu.atitus.auth_service.entities.UserEntity;
+import br.edu.atitus.auth_service.entities.UserType;
 import br.edu.atitus.auth_service.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -68,12 +69,15 @@ public class UserService implements UserDetailsService {
 		validate(user);
 		format(user);
 		UserEntity salvado = userRepository.save(user);
-		try {
-			client.create(new CreateCartRequest(salvado.getId()));	
+		if(user.getType() == UserType.Common) {
+			try {
+				client.create(new CreateCartRequest(salvado.getId()));	
+			}
+			catch (Exception e) {
+				throw new Exception("Erro ao criar carrinho para o usuário: " + e.getMessage());
+			}	
 		}
-		catch (Exception e) {
-			throw new Exception("Erro ao criar carrinho para o usuário: " + e.getMessage());
-		}
+		
 		
 		return salvado;
 		

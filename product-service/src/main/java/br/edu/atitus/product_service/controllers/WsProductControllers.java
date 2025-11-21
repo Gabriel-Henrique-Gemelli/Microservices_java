@@ -31,7 +31,8 @@ public class WsProductControllers {
 		BeanUtils.copyProperties(dto, prodduct);
 		return prodduct;
 	}
-	@PostMapping
+	
+	@PostMapping("/create")
 	public ResponseEntity<ProductEntity> post(
 			@RequestBody ProductDTO dto,
 			@RequestHeader("X-User-Id") Long userId,
