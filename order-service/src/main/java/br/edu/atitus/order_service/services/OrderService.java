@@ -19,8 +19,7 @@ public class OrderService {
 
 //    private final OrderServiceApplication orderServiceApplication;
 //    private final ProductClient productClient;
-//    private final CurrencyClient currencyClient;
-	private final OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final CartClient cartClient;
     private final MapsClient mapsClient;
 
@@ -28,7 +27,7 @@ public class OrderService {
     	OrderEntity order = new OrderEntity();
     	cartResponse cart = cartClient.getCartByUserId(userId);
     	MapsResponse endereco = mapsClient.getendereco(cep);
-        if (orderRepository.existsByCartId(cart.getId())) {
+    	if (orderRepository.existsByCartId(cart.getId())) {
             throw new IllegalStateException("Já existe um pedido criado para este carrinho.");
         }
     	double totalPrice = 0.0;
@@ -38,8 +37,11 @@ public class OrderService {
     	order.setOrderDate(LocalDateTime.now());
     	order.setCartId(cart.getId());
     	
-    	for(CartItemResponse item : order.getCarrinho().getItems())
-    		totalPrice += item.getProductPrice() *item.getQuantity();
+    	for(CartItemResponse item : order.getCarrinho().getItems()) { 
+    		totalPrice += item.getProductPrice() * item.getQuantity();
+    		totalConvertedPrice += item.getConvertedPrice() * item.getQuantity();
+    		
+    }
     	order.setTotalPrice(totalPrice);
     	order.setEndereco(endereco);
     	order.setTotalConvertedPrice(totalConvertedPrice);

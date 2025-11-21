@@ -38,5 +38,5 @@ public class CartItem {
     @Column(nullable = false)
     private Integer quantity;
     
-    private String currency;
+    private Double convertedPrice;
 }

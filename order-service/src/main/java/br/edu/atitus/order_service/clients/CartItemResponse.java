@@ -9,4 +9,5 @@ public class CartItemResponse {
 	private String productName;
 	private Double productPrice;
 	private Integer quantity;
+	private Double convertedPrice;
 }

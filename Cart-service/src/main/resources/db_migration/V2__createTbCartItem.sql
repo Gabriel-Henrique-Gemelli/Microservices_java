@@ -5,7 +5,7 @@
   product_name VARCHAR(255) NOT NULL,
   product_price NUMERIC(14,2) NOT NULL,
   quantity INT NOT NULL CHECK (quantity > 0),
-  currency VARCHAR(255)
+  converted_price NUMERIC(14,2)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS ux_tb_cart_item_cart_product ON tb_cart_item (cart_id, product_id);

@@ -50,7 +50,7 @@ public class cartService {
 			item.setProductName(produto.getDescription());
 			item.setQuantity(quantidade);
 			item.setProductPrice(produto.getPrice());
-			item.setCurrency(currency);
+			item.setConvertedPrice(produto.getConvertedPrice());
 			itemRepository.save(item);
 		} else {
 			item.setQuantity(item.getQuantity() + quantidade);

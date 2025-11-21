@@ -9,4 +9,5 @@ public class ProductResponse {
 	private Double price;
 	private Integer stock;
 	private String description;
+	private Double convertedPrice;
 }
