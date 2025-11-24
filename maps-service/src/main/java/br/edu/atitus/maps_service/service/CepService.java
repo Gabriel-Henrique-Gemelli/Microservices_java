@@ -5,14 +5,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import br.edu.atitus.maps_service.DTO.EnderecoDTO;
 import br.edu.atitus.maps_service.DTO.ViaCepResponse;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CepService {
     private final WebClient viaCepWebClient;
-
-    public CepService(WebClient viaCepWebClient) {
-        this.viaCepWebClient = viaCepWebClient;
-    }
 
     public EnderecoDTO buscarPorCep(String cepBruto) {
         String cepLimpo = cepBruto.replaceAll("\\D", "");
